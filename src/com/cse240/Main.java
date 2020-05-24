@@ -30,11 +30,11 @@ public class Main {
         long c = 0x130000;
 
         for (int i = 0; i < 16384; ++i) {
-            l1Cache.read(a + i << 2);
-            l1Cache.read(b + i << 2);
-            l1Cache.write(c + i << 2);
+            l1Cache.read(a + (i << 2));
+            l1Cache.read(b + (i << 2));
+            l1Cache.write(c + (i << 2));
         }
-
+        System.out.println();
         System.out.println("----------------- Statistics -----------------");
         System.out.printf("L1 Hit: %d, ", l1Cache.getHitCount());
         System.out.printf("L1 Miss: %d\n", l1Cache.getMissCount());

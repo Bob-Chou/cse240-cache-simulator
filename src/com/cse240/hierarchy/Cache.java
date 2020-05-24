@@ -104,7 +104,7 @@ public class Cache {
             return 0;
         }
 
-        long mask = 0x01;
+        long mask = 0x00;
         for (int i = 0; i < bits; ++i) {
             mask <<= 1;
             mask |= 0x01;
@@ -205,6 +205,9 @@ public class Cache {
             // put read data into cache
             set.put(tag, new FrameEntry(clock(), addr, tag));
         }
+
+        // update set
+        content.set(index, set);
     }
 
     /**
@@ -327,7 +330,7 @@ public class Cache {
      */
     private int getTag(long addr) {
         addr &= tagMask;
-        return (int)(addr >> tagBits);
+        return (int)(addr >> (indexBits + blockBits));
     }
 
     /**
@@ -338,7 +341,7 @@ public class Cache {
      */
     private int getIndex(long addr) {
         addr &= indexMask;
-        return (int)(addr >> indexBits);
+        return (int)(addr >> blockBits);
     }
 
     /**
