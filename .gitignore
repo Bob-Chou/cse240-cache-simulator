@@ -6,6 +6,7 @@
 
 # JetBrain files
 .idea/
+*.iml
 
 # Package Files #
 *.jar
