@@ -60,6 +60,12 @@ public class Cache {
     public int indexBits;
     public int tagBits;
 
+    private boolean verbose;
+    private String addrFormater;
+    private String tagFormater;
+    private String indexFormater;
+    private String name;
+
     private long clock;
 
     private long indexMask;
@@ -124,6 +130,7 @@ public class Cache {
      * @param es evict scheme, either LRU or FIFO
      */
     public Cache(
+            String name,
             int bits,
             int ways,
             int addrBits,
@@ -131,6 +138,7 @@ public class Cache {
             WriteOption ws,
             EvictOption es
     ) {
+        this.name = name;
         this.bits = bits;
         this.ways = ways;
         this.addrBits = addrBits;
@@ -152,6 +160,20 @@ public class Cache {
 
         // increment clock to 1 to avoid LRU logic error
         clock();
+
+        // set formater for verbose mode
+        addrFormater = String.format("0x%%0%dX", ((this.addrBits-1)>>2)+1);
+        tagFormater = String.format("0x%%0%dX", ((this.tagBits-1)>>2)+1);
+        indexFormater = String.format("0x%%0%dX", ((this.indexBits-1)>>2)+1);
+    }
+
+    /**
+     * Whether print out detailed log.
+     *
+     * @param verbose true to print detailed log, false to mute
+     */
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
     /**
@@ -176,6 +198,13 @@ public class Cache {
         int index = getIndex(addr);
         int tag = getTag(addr);
 
+        if (verbose) {
+            System.out.printf("[%s] ", name);
+            System.out.printf("read " + addrFormater, addr);
+            System.out.printf(", index " + indexFormater, index);
+            System.out.printf(", tag " + tagFormater, tag);
+        }
+
         // get associative set
         LinkedHashMap<Integer, FrameEntry> set = content.get(index);
 
@@ -184,12 +213,18 @@ public class Cache {
             ++hitCount;
             ++readHitCount;
 
+            if (verbose)
+                System.out.print(", HIT\n");
+
             // update latest access time
             set.get(tag).lastAccessTime = clock();
         } else {
             // cache miss
             ++missCount;
             ++readMissCount;
+
+            if (verbose)
+                System.out.print(", MISS\n");
 
             // if have not access the set yet, need initialization
             if (set == null)
@@ -220,6 +255,13 @@ public class Cache {
         int index = getIndex(addr);
         int tag = getTag(addr);
 
+        if (verbose) {
+            System.out.printf("[%s] ", name);
+            System.out.printf("write " + addrFormater, addr);
+            System.out.printf(", index " + indexFormater, index);
+            System.out.printf(", tag " + tagFormater, tag);
+        }
+
         // get associative set
         LinkedHashMap<Integer, FrameEntry> set = content.get(index);
 
@@ -230,10 +272,16 @@ public class Cache {
 
             // update latest access time
             set.get(tag).lastAccessTime = clock();
+
+            if (verbose)
+                System.out.print(", HIT\n");
         } else {
             // cache miss
             ++missCount;
             ++writeMissCount;
+
+            if (verbose)
+                System.out.print(", MISS\n");
 
             // if have not access the set yet, need initialization
             if (set == null)
@@ -393,6 +441,13 @@ public class Cache {
 
         // evict victim
         if (victim.tag != -1) {
+
+            if (verbose) {
+                System.out.printf("[%s] ", name);
+                System.out.printf("(evict " + addrFormater, victim.tag);
+                System.out.print(")\n");
+            }
+
             set.remove(victim.tag);
             // if we use write-back cache and block is dirty, need to write to
             // next level

@@ -6,6 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         Cache l1Cache = new Cache(
+                "L1",
                 16,
                 2,
                 32,
@@ -15,6 +16,7 @@ public class Main {
         );
 
         Cache l2Cache = new Cache(
+                "L2",
                 20,
                 4,
                 32,
@@ -24,12 +26,15 @@ public class Main {
         );
 
         l1Cache.cascade(l2Cache);
+        l1Cache.setVerbose(true);
+        l2Cache.setVerbose(true);
 
         long a = 0x110000;
         long b = 0x120000;
         long c = 0x130000;
 
         for (int i = 0; i < 16384; ++i) {
+            System.out.printf("-------- iter %d --------\n", i+1);
             l1Cache.read(a + (i << 2));
             l1Cache.read(b + (i << 2));
             l1Cache.write(c + (i << 2));
