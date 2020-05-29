@@ -295,8 +295,11 @@ public class Cache {
             set.put(tag, new FrameEntry(clock(), addr, tag));
 
             // write to next hierarchy if use write-through cache
-            if (writeOption == WriteOption.WRITE_THROUGH)
+            if (writeOption == WriteOption.WRITE_THROUGH) {
+                if (verbose)
+                    System.out.print("(write through) ");
                 writeNextHierarchy(addr);
+            }
         }
 
         // set dirty bit
@@ -451,8 +454,11 @@ public class Cache {
             set.remove(victim.tag);
             // if we use write-back cache and block is dirty, need to write to
             // next level
-            if (writeOption == WriteOption.WRITE_BACK && victim.dirty)
+            if (writeOption == WriteOption.WRITE_BACK && victim.dirty) {
+                if (verbose)
+                    System.out.print("(write back dirty) ");
                 writeNextHierarchy(victim.addr);
+            }
         }
     }
 }
