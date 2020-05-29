@@ -7,8 +7,7 @@ hits/misses homework, but not sure.
 Modify the `Main.main` function with your own cache access sequence, build and 
 run `Main` with
 ```shell
-make clean && make
-java -classpath out/production/cse240-cache-simulator com.cse240.Main
+make clean && make && make run
 ```
 
 ## Features
