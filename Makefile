@@ -12,6 +12,9 @@ TARGET = \
 
 all: $(TARGET:.java=.class)
 
+run:
+	java -classpath out/production/cse240-cache-simulator com.cse240.Main
+
 %.class: %.java $(CLASS_PATH)
 	$(JC) $(JFLAGS) $<
 
