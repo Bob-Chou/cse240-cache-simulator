@@ -39,12 +39,7 @@ public class Main {
             l1Cache.read(b + (i << 2));
             l1Cache.write(c + (i << 2));
         }
-        System.out.println();
-        System.out.println("----------------- Statistics -----------------");
-        System.out.printf("L1 Hit: %d, ", l1Cache.getHitCount());
-        System.out.printf("L1 Miss: %d\n", l1Cache.getMissCount());
-        System.out.printf("L2 Hit: %d, ", l2Cache.getHitCount());
-        System.out.printf("L2 Miss: %d\n", l2Cache.getMissCount());
-        System.out.println("----------------------------------------------");
+        l1Cache.stat();
+        l2Cache.stat();
     }
 }

@@ -363,6 +363,15 @@ public class Cache {
         return readMissCount;
     }
 
+    public void stat() {
+        System.out.println();
+        System.out.println("----------------- Statistics -----------------");
+        System.out.printf("%s Total Hit: %d (Read: %d, Write: %d)\n",
+                name, getHitCount(), getReadHitCount(), getWriteHitCount());
+        System.out.printf("%s Total Miss: %d (Read: %d, Write: %d)\n",
+                name, getMissCount(), getReadMissCount(), getWriteMissCount());
+        System.out.println("----------------------------------------------");
+    }
     /**
      * Internal logical clock. Monotonously increments with each read/write,
      * used for determine eviction of LRU
