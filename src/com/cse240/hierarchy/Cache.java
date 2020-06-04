@@ -464,7 +464,7 @@ public class Cache {
             // if we use write-back cache and block is dirty, need to write to
             // next level
             if (writeOption == WriteOption.WRITE_BACK && victim.dirty) {
-                if (verbose)
+                if (nextHierarchy.verbose)
                     System.out.print("(write back dirty) ");
                 writeNextHierarchy(victim.addr);
             }
